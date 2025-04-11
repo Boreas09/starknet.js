@@ -9533,6 +9533,12 @@ var RosettanetAccount = class _RosettanetAccount extends Account {
     return requestChainId2(this.walletProvider);
   }
   /**
+   * Wallet request for switch Rosettanet Chain.
+   */
+  // public switchChainRosettanet() {
+  //   return switchRosettanetChain(this.walletProvider);
+  // }
+  /**
    * Sign typed data using the wallet. Uses personal_sign method.
    * @param message The typed data to sign.
    * @param address The wallet address to sign.
@@ -9649,17 +9655,18 @@ var RosettanetAccount = class _RosettanetAccount extends Account {
   getTransactionReceiptRosettanet(txHash) {
     return getTransactionReceipt(this.walletProvider, txHash);
   }
-  // WALLET ACCOUNT METHODS
+  //! WALLET ACCOUNT METHODS BELOW
   requestAccounts() {
     return requestAccounts2(this.walletProvider);
   }
+  //! NOT AVAILABLE IN COINBASE WALLET , METHOD NOT FOUND ERROR
   /**
    * Request Permission for wallet account
    * @returns allowed accounts addresses
    */
   getPermissions() {
     if (this.walletProvider.name === 'Coinbase Wallet') {
-      throw new Error('Get permissions Method not found in Coinbase Wallet');
+      throw new Error('wallet_getPermissions Method not found in Coinbase Wallet');
     }
     return getPermissions2(this.walletProvider);
   }
@@ -9701,16 +9708,18 @@ var RosettanetAccount = class _RosettanetAccount extends Account {
   }
   async execute(calls) {
     const txCalls = [].concat(calls).map((it) => {
-      const { contractAddress, entrypoint, calldata } = it;
       return {
-        contract_address: contractAddress,
-        entry_point: entrypoint,
-        calldata,
+        contract_address: it[0],
+        entry_point: it[1],
+        calldata: it[2],
       };
     });
+    console.log('calls', calls);
+    console.log('txCalls', txCalls);
     const params = {
       calls: txCalls,
     };
+    console.log('params', params);
     const txData = (0, import_rosettanet.prepareMulticallCalldata)(params.calls);
     const txObject = {
       from: this.address,
@@ -9718,6 +9727,7 @@ var RosettanetAccount = class _RosettanetAccount extends Account {
       data: txData,
       value: '0x0',
     };
+    console.log('txObject', txObject);
     const txHash = await sendTransaction(this.walletProvider, txObject);
     return { transaction_hash: txHash };
   }

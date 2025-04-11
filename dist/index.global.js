@@ -20912,8 +20912,9 @@ ${indent}}`
     }
     node = elems;
     do {
-      n = s.heap[1];
-      /*SMALLEST*/
+      n =
+        s.heap[1];
+        /*SMALLEST*/
       s.heap[1] = s.heap[s.heap_len--];
       /*SMALLEST*/
       pqdownheap(
@@ -20922,15 +20923,16 @@ ${indent}}`
         1
         /*SMALLEST*/
       );
-      m = s.heap[1];
-      /*SMALLEST*/
+      m =
+        s.heap[1];
+        /*SMALLEST*/
       s.heap[--s.heap_max] = n;
       s.heap[--s.heap_max] = m;
       tree[node * 2] = tree[n * 2] + tree[m * 2];
       s.depth[node] = (s.depth[n] >= s.depth[m] ? s.depth[n] : s.depth[m]) + 1;
       tree[n * 2 + 1] = tree[m * 2 + 1] = node;
       s.heap[1] =
-        /*SMALLEST*/
+      /*SMALLEST*/
         node++;
       pqdownheap(
         s,
@@ -20939,8 +20941,9 @@ ${indent}}`
         /*SMALLEST*/
       );
     } while (s.heap_len >= 2);
-    s.heap[--s.heap_max] = s.heap[1];
-    /*SMALLEST*/
+    s.heap[--s.heap_max] =
+      s.heap[1];
+      /*SMALLEST*/
     gen_bitlen(s, desc);
     gen_codes(tree, max_code, s.bl_count);
   };
@@ -31341,6 +31344,12 @@ ${parameter}`);
       return requestChainId2(this.walletProvider);
     }
     /**
+     * Wallet request for switch Rosettanet Chain.
+     */
+    // public switchChainRosettanet() {
+    //   return switchRosettanetChain(this.walletProvider);
+    // }
+    /**
      * Sign typed data using the wallet. Uses personal_sign method.
      * @param message The typed data to sign.
      * @param address The wallet address to sign.
@@ -31457,17 +31466,18 @@ ${parameter}`);
     getTransactionReceiptRosettanet(txHash) {
       return getTransactionReceipt(this.walletProvider, txHash);
     }
-    // WALLET ACCOUNT METHODS
+    //! WALLET ACCOUNT METHODS BELOW
     requestAccounts() {
       return requestAccounts2(this.walletProvider);
     }
+    //! NOT AVAILABLE IN COINBASE WALLET , METHOD NOT FOUND ERROR
     /**
      * Request Permission for wallet account
      * @returns allowed accounts addresses
      */
     getPermissions() {
       if (this.walletProvider.name === 'Coinbase Wallet') {
-        throw new Error('Get permissions Method not found in Coinbase Wallet');
+        throw new Error('wallet_getPermissions Method not found in Coinbase Wallet');
       }
       return getPermissions2(this.walletProvider);
     }
@@ -31509,16 +31519,18 @@ ${parameter}`);
     }
     async execute(calls) {
       const txCalls = [].concat(calls).map((it) => {
-        const { contractAddress, entrypoint, calldata } = it;
         return {
-          contract_address: contractAddress,
-          entry_point: entrypoint,
-          calldata,
+          contract_address: it[0],
+          entry_point: it[1],
+          calldata: it[2],
         };
       });
+      console.log('calls', calls);
+      console.log('txCalls', txCalls);
       const params = {
         calls: txCalls,
       };
+      console.log('params', params);
       const txData = prepareMulticallCalldata(params.calls);
       const txObject = {
         from: this.address,
@@ -31526,6 +31538,7 @@ ${parameter}`);
         data: txData,
         value: '0x0',
       };
+      console.log('txObject', txObject);
       const txHash = await sendTransaction(this.walletProvider, txObject);
       return { transaction_hash: txHash };
     }

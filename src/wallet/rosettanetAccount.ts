@@ -90,6 +90,13 @@ export class RosettanetAccount extends Account implements AccountInterface {
   }
 
   /**
+   * Wallet request for switch Rosettanet Chain.
+   */
+  // public switchChainRosettanet() {
+  //   return switchRosettanetChain(this.walletProvider);
+  // }
+
+  /**
    * Sign typed data using the wallet. Uses personal_sign method.
    * @param message The typed data to sign.
    * @param address The wallet address to sign.
@@ -238,19 +245,20 @@ export class RosettanetAccount extends Account implements AccountInterface {
     return getTransactionReceipt(this.walletProvider, txHash);
   }
 
-  // WALLET ACCOUNT METHODS
+  //! WALLET ACCOUNT METHODS BELOW
 
   public requestAccounts() {
     return requestAccounts(this.walletProvider);
   }
 
+  //! NOT AVAILABLE IN COINBASE WALLET , METHOD NOT FOUND ERROR
   /**
    * Request Permission for wallet account
    * @returns allowed accounts addresses
    */
   public getPermissions() {
     if (this.walletProvider.name === 'Coinbase Wallet') {
-      throw new Error('Get permissions Method not found in Coinbase Wallet');
+      throw new Error('wallet_getPermissions Method not found in Coinbase Wallet');
     }
     return getPermissions(this.walletProvider);
   }
@@ -308,17 +316,22 @@ export class RosettanetAccount extends Account implements AccountInterface {
 
   override async execute(calls: AllowArray<Call>): Promise<{ transaction_hash: string }> {
     const txCalls = [].concat(calls as any).map((it) => {
-      const { contractAddress, entrypoint, calldata } = it;
       return {
-        contract_address: contractAddress,
-        entry_point: entrypoint,
-        calldata,
+        contract_address: it[0],
+        entry_point: it[1],
+        calldata: it[2],
       };
     });
+
+    console.log('calls', calls);
+
+    console.log('txCalls', txCalls);
 
     const params = {
       calls: txCalls,
     };
+
+    console.log('params', params);
 
     const txData = prepareMulticallCalldata(params.calls);
 
@@ -328,6 +341,8 @@ export class RosettanetAccount extends Account implements AccountInterface {
       data: txData,
       value: '0x0',
     };
+
+    console.log('txObject', txObject);
 
     const txHash = await sendTransaction(this.walletProvider, txObject);
     return { transaction_hash: txHash };

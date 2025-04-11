@@ -6016,6 +6016,9 @@ declare class RosettanetAccount extends Account implements AccountInterface {
    */
   chainIdRosettanet(): Promise<string>;
   /**
+   * Wallet request for switch Rosettanet Chain.
+   */
+  /**
    * Sign typed data using the wallet. Uses personal_sign method.
    * @param message The typed data to sign.
    * @param address The wallet address to sign.
