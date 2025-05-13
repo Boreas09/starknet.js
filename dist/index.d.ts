@@ -2,8 +2,8 @@ import * as RPCSPEC07 from 'starknet-types-07';
 import {
   ETransactionVersion as ETransactionVersion$1,
   STRUCT_EVENT as STRUCT_EVENT$1,
-  ENUM_EVENT as ENUM_EVENT$1,
   EVENT_FIELD as EVENT_FIELD$1,
+  ENUM_EVENT as ENUM_EVENT$1,
   ResourceBounds as ResourceBounds$2,
   EDataAvailabilityMode as EDataAvailabilityMode$1,
   BlockHash as BlockHash$1,
@@ -29,10 +29,10 @@ import {
   WatchAssetParameters,
   AddStarknetChainParameters,
   Signature as Signature$1,
+  RequestFn,
   WalletEventListener,
   ChainId as ChainId$1,
   Permission,
-  RequestFn,
   EDAMode as EDAMode$1,
   EmittedEvent as EmittedEvent$1,
   Methods as Methods$1,
@@ -6299,7 +6299,7 @@ declare const splitArgsAndOptions: (args: ArgsOrCalldataWithOptions) =>
     }
   | {
       args: ArgsOrCalldata;
-      options?: ContractOptions;
+      options?: undefined;
     };
 declare function getCalldata(args: RawArgs, callback: Function): Calldata;
 declare class Contract implements ContractInterface {

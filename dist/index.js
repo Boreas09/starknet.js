@@ -38,8 +38,8 @@ var __toESM = (mod, isNodeMode, target) => (
 var __toCommonJS = (mod) => __copyProps(__defProp({}, '__esModule', { value: true }), mod);
 
 // src/index.ts
-var src_exports = {};
-__export(src_exports, {
+var index_exports = {};
+__export(index_exports, {
   Account: () => Account,
   AccountInterface: () => AccountInterface,
   BatchClient: () => BatchClient,
@@ -151,7 +151,7 @@ __export(src_exports, {
   validateChecksumAddress: () => validateChecksumAddress,
   wallet: () => connect_exports,
 });
-module.exports = __toCommonJS(src_exports);
+module.exports = __toCommonJS(index_exports);
 
 // src/global/constants.ts
 var constants_exports = {};
@@ -9714,20 +9714,16 @@ var RosettanetAccount = class _RosettanetAccount extends Account {
         calldata: it[2],
       };
     });
-    console.log('calls', calls);
-    console.log('txCalls', txCalls);
     const params = {
       calls: txCalls,
     };
-    console.log('params', params);
     const txData = (0, import_rosettanet.prepareMulticallCalldata)(params.calls);
     const txObject = {
       from: this.address,
-      to: this.address,
+      to: '0x0000000000000000000000004645415455524553',
       data: txData,
       value: '0x0',
     };
-    console.log('txObject', txObject);
     const txHash = await sendTransaction(this.walletProvider, txObject);
     return { transaction_hash: txHash };
   }

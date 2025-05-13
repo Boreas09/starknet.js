@@ -9206,20 +9206,16 @@ var RosettanetAccount = class _RosettanetAccount extends Account {
         calldata: it[2]
       };
     });
-    console.log("calls", calls);
-    console.log("txCalls", txCalls);
     const params = {
       calls: txCalls
     };
-    console.log("params", params);
     const txData = prepareMulticallCalldata(params.calls);
     const txObject = {
       from: this.address,
-      to: this.address,
+      to: "0x0000000000000000000000004645415455524553",
       data: txData,
       value: "0x0"
     };
-    console.log("txObject", txObject);
     const txHash = await sendTransaction(this.walletProvider, txObject);
     return { transaction_hash: txHash };
   }

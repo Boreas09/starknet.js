@@ -12950,9 +12950,9 @@ var starknet = (() => {
       .split('&')
       .forEach(function (bytes) {
         if (bytes) {
-          var split2 = bytes.split('=');
-          var name = split2.shift().replace(/\+/g, ' ');
-          var value = split2.join('=').replace(/\+/g, ' ');
+          var split3 = bytes.split('=');
+          var name = split3.shift().replace(/\+/g, ' ');
+          var value = split3.join('=').replace(/\+/g, ' ');
           form.append(decodeURIComponent(name), decodeURIComponent(value));
         }
       });
@@ -13249,8 +13249,8 @@ var starknet = (() => {
   });
 
   // src/index.ts
-  var src_exports = {};
-  __export(src_exports, {
+  var index_exports = {};
+  __export(index_exports, {
     Account: () => Account,
     AccountInterface: () => AccountInterface,
     BatchClient: () => BatchClient,
@@ -15134,7 +15134,7 @@ ${indent}}`
       k = h(u8fr([1]), seed);
       v = h();
     };
-    const gen2 = () => {
+    const gen3 = () => {
       if (i++ >= 1e3) throw new Error('drbg: tried 1000 values');
       let len = 0;
       const out = [];
@@ -15150,7 +15150,7 @@ ${indent}}`
       reset();
       reseed(seed);
       let res = void 0;
-      while (!(res = pred(gen2()))) reseed();
+      while (!(res = pred(gen3()))) reseed();
       reset();
       return res;
     };
@@ -15308,26 +15308,26 @@ ${indent}}`
   }
 
   // node_modules/@noble/hashes/esm/_md.js
-  function setBigUint64(view, byteOffset, value, isLE2) {
-    if (typeof view.setBigUint64 === 'function') return view.setBigUint64(byteOffset, value, isLE2);
-    const _32n2 = BigInt(32);
+  function setBigUint64(view, byteOffset, value, isLE3) {
+    if (typeof view.setBigUint64 === 'function') return view.setBigUint64(byteOffset, value, isLE3);
+    const _32n3 = BigInt(32);
     const _u32_max = BigInt(4294967295);
-    const wh = Number((value >> _32n2) & _u32_max);
+    const wh = Number((value >> _32n3) & _u32_max);
     const wl = Number(value & _u32_max);
-    const h = isLE2 ? 4 : 0;
-    const l = isLE2 ? 0 : 4;
-    view.setUint32(byteOffset + h, wh, isLE2);
-    view.setUint32(byteOffset + l, wl, isLE2);
+    const h = isLE3 ? 4 : 0;
+    const l = isLE3 ? 0 : 4;
+    view.setUint32(byteOffset + h, wh, isLE3);
+    view.setUint32(byteOffset + l, wl, isLE3);
   }
   var Chi = (a, b, c) => (a & b) ^ (~a & c);
   var Maj = (a, b, c) => (a & b) ^ (a & c) ^ (b & c);
   var HashMD = class extends Hash {
-    constructor(blockLen, outputLen, padOffset, isLE2) {
+    constructor(blockLen, outputLen, padOffset, isLE3) {
       super();
       this.blockLen = blockLen;
       this.outputLen = outputLen;
       this.padOffset = padOffset;
-      this.isLE = isLE2;
+      this.isLE = isLE3;
       this.finished = false;
       this.length = 0;
       this.pos = 0;
@@ -15363,7 +15363,7 @@ ${indent}}`
       aexists(this);
       aoutput(out, this);
       this.finished = true;
-      const { buffer, view, blockLen, isLE: isLE2 } = this;
+      const { buffer, view, blockLen, isLE: isLE3 } = this;
       let { pos } = this;
       buffer[pos++] = 128;
       this.buffer.subarray(pos).fill(0);
@@ -15372,7 +15372,7 @@ ${indent}}`
         pos = 0;
       }
       for (let i = pos; i < blockLen; i++) buffer[i] = 0;
-      setBigUint64(view, blockLen - 8, BigInt(this.length * 8), isLE2);
+      setBigUint64(view, blockLen - 8, BigInt(this.length * 8), isLE3);
       this.process(view, 0);
       const oview = createView(out);
       const len = this.outputLen;
@@ -15380,7 +15380,7 @@ ${indent}}`
       const outLen = len / 4;
       const state = this.get();
       if (outLen > state.length) throw new Error('_sha2: outputLen bigger than state');
-      for (let i = 0; i < outLen; i++) oview.setUint32(4 * i, state[i], isLE2);
+      for (let i = 0; i < outLen; i++) oview.setUint32(4 * i, state[i], isLE3);
     }
     digest() {
       const { buffer, outputLen } = this;
@@ -15644,7 +15644,34 @@ ${indent}}`
     verify: () => verify,
   });
 
-  // node_modules/@noble/hashes/esm/_u64.js
+  // node_modules/@scure/starknet/node_modules/@noble/hashes/esm/_assert.js
+  function anumber3(n) {
+    if (!Number.isSafeInteger(n) || n < 0) throw new Error('positive integer expected, got ' + n);
+  }
+  function isBytes4(a) {
+    return (
+      a instanceof Uint8Array || (ArrayBuffer.isView(a) && a.constructor.name === 'Uint8Array')
+    );
+  }
+  function abytes3(b, ...lengths) {
+    if (!isBytes4(b)) throw new Error('Uint8Array expected');
+    if (lengths.length > 0 && !lengths.includes(b.length))
+      throw new Error('Uint8Array expected of length ' + lengths + ', got length=' + b.length);
+  }
+  function aexists2(instance, checkFinished = true) {
+    if (instance.destroyed) throw new Error('Hash instance has been destroyed');
+    if (checkFinished && instance.finished)
+      throw new Error('Hash#digest() has already been called');
+  }
+  function aoutput2(out, instance) {
+    abytes3(out);
+    const min = instance.outputLen;
+    if (out.length < min) {
+      throw new Error('digestInto() expects output buffer of length at least ' + min);
+    }
+  }
+
+  // node_modules/@scure/starknet/node_modules/@noble/hashes/esm/_u64.js
   var U32_MASK64 = /* @__PURE__ */ BigInt(2 ** 32 - 1);
   var _32n = /* @__PURE__ */ BigInt(32);
   function fromBig(n, le = false) {
@@ -15665,7 +15692,55 @@ ${indent}}`
   var rotlBH = (h, l, s) => (l << (s - 32)) | (h >>> (64 - s));
   var rotlBL = (h, l, s) => (h << (s - 32)) | (l >>> (64 - s));
 
-  // node_modules/@noble/hashes/esm/sha3.js
+  // node_modules/@scure/starknet/node_modules/@noble/hashes/esm/utils.js
+  var u322 = (arr) => new Uint32Array(arr.buffer, arr.byteOffset, Math.floor(arr.byteLength / 4));
+  var createView2 = (arr) => new DataView(arr.buffer, arr.byteOffset, arr.byteLength);
+  var rotr2 = (word, shift) => (word << (32 - shift)) | (word >>> shift);
+  var isLE2 = /* @__PURE__ */ (() =>
+    new Uint8Array(new Uint32Array([287454020]).buffer)[0] === 68)();
+  var byteSwap2 = (word) =>
+    ((word << 24) & 4278190080) |
+    ((word << 8) & 16711680) |
+    ((word >>> 8) & 65280) |
+    ((word >>> 24) & 255);
+  function byteSwap322(arr) {
+    for (let i = 0; i < arr.length; i++) {
+      arr[i] = byteSwap2(arr[i]);
+    }
+  }
+  function utf8ToBytes3(str) {
+    if (typeof str !== 'string') throw new Error('utf8ToBytes expected string, got ' + typeof str);
+    return new Uint8Array(new TextEncoder().encode(str));
+  }
+  function toBytes2(data) {
+    if (typeof data === 'string') data = utf8ToBytes3(data);
+    abytes3(data);
+    return data;
+  }
+  var Hash2 = class {
+    // Safe version that clones internal state
+    clone() {
+      return this._cloneInto();
+    }
+  };
+  function wrapConstructor2(hashCons) {
+    const hashC = (msg) => hashCons().update(toBytes2(msg)).digest();
+    const tmp = hashCons();
+    hashC.outputLen = tmp.outputLen;
+    hashC.blockLen = tmp.blockLen;
+    hashC.create = () => hashCons();
+    return hashC;
+  }
+  function wrapXOFConstructorWithOpts2(hashCons) {
+    const hashC = (msg, opts) => hashCons(opts).update(toBytes2(msg)).digest();
+    const tmp = hashCons({});
+    hashC.outputLen = tmp.outputLen;
+    hashC.blockLen = tmp.blockLen;
+    hashC.create = (opts) => hashCons(opts);
+    return hashC;
+  }
+
+  // node_modules/@scure/starknet/node_modules/@noble/hashes/esm/sha3.js
   var SHA3_PI = [];
   var SHA3_ROTL = [];
   var _SHA3_IOTA = [];
@@ -15726,7 +15801,7 @@ ${indent}}`
     }
     B.fill(0);
   }
-  var Keccak = class _Keccak extends Hash {
+  var Keccak = class _Keccak extends Hash2 {
     // NOTE: we accept arguments in bytes instead of bits here.
     constructor(blockLen, suffix, outputLen, enableXOF = false, rounds = 24) {
       super();
@@ -15739,23 +15814,23 @@ ${indent}}`
       this.posOut = 0;
       this.finished = false;
       this.destroyed = false;
-      anumber2(outputLen);
+      anumber3(outputLen);
       if (0 >= this.blockLen || this.blockLen >= 200)
         throw new Error('Sha3 supports only keccak-f1600 function');
       this.state = new Uint8Array(200);
-      this.state32 = u32(this.state);
+      this.state32 = u322(this.state);
     }
     keccak() {
-      if (!isLE) byteSwap32(this.state32);
+      if (!isLE2) byteSwap322(this.state32);
       keccakP(this.state32, this.rounds);
-      if (!isLE) byteSwap32(this.state32);
+      if (!isLE2) byteSwap322(this.state32);
       this.posOut = 0;
       this.pos = 0;
     }
     update(data) {
-      aexists(this);
+      aexists2(this);
       const { blockLen, state } = this;
-      data = toBytes(data);
+      data = toBytes2(data);
       const len = data.length;
       for (let pos = 0; pos < len; ) {
         const take = Math.min(blockLen - this.pos, len - pos);
@@ -15774,8 +15849,8 @@ ${indent}}`
       this.keccak();
     }
     writeInto(out) {
-      aexists(this, false);
-      abytes2(out);
+      aexists2(this, false);
+      abytes3(out);
       this.finish();
       const bufferOut = this.state;
       const { blockLen } = this;
@@ -15793,11 +15868,11 @@ ${indent}}`
       return this.writeInto(out);
     }
     xof(bytes) {
-      anumber2(bytes);
+      anumber3(bytes);
       return this.xofInto(new Uint8Array(bytes));
     }
     digestInto(out) {
-      aoutput(out, this);
+      aoutput2(out, this);
       if (this.finished) throw new Error('digest() was already called');
       this.writeInto(out);
       this.destroy();
@@ -15826,7 +15901,7 @@ ${indent}}`
     }
   };
   var gen = (suffix, blockLen, outputLen) =>
-    wrapConstructor(() => new Keccak(blockLen, suffix, outputLen));
+    wrapConstructor2(() => new Keccak(blockLen, suffix, outputLen));
   var sha3_224 = /* @__PURE__ */ gen(6, 144, 224 / 8);
   var sha3_256 = /* @__PURE__ */ gen(6, 136, 256 / 8);
   var sha3_384 = /* @__PURE__ */ gen(6, 104, 384 / 8);
@@ -15836,12 +15911,193 @@ ${indent}}`
   var keccak_384 = /* @__PURE__ */ gen(1, 104, 384 / 8);
   var keccak_512 = /* @__PURE__ */ gen(1, 72, 512 / 8);
   var genShake = (suffix, blockLen, outputLen) =>
-    wrapXOFConstructorWithOpts(
+    wrapXOFConstructorWithOpts2(
       (opts = {}) =>
         new Keccak(blockLen, suffix, opts.dkLen === void 0 ? outputLen : opts.dkLen, true)
     );
   var shake128 = /* @__PURE__ */ genShake(31, 168, 128 / 8);
   var shake256 = /* @__PURE__ */ genShake(31, 136, 256 / 8);
+
+  // node_modules/@scure/starknet/node_modules/@noble/hashes/esm/_md.js
+  function setBigUint642(view, byteOffset, value, isLE3) {
+    if (typeof view.setBigUint64 === 'function') return view.setBigUint64(byteOffset, value, isLE3);
+    const _32n3 = BigInt(32);
+    const _u32_max = BigInt(4294967295);
+    const wh = Number((value >> _32n3) & _u32_max);
+    const wl = Number(value & _u32_max);
+    const h = isLE3 ? 4 : 0;
+    const l = isLE3 ? 0 : 4;
+    view.setUint32(byteOffset + h, wh, isLE3);
+    view.setUint32(byteOffset + l, wl, isLE3);
+  }
+  var Chi2 = (a, b, c) => (a & b) ^ (~a & c);
+  var Maj2 = (a, b, c) => (a & b) ^ (a & c) ^ (b & c);
+  var HashMD2 = class extends Hash2 {
+    constructor(blockLen, outputLen, padOffset, isLE3) {
+      super();
+      this.blockLen = blockLen;
+      this.outputLen = outputLen;
+      this.padOffset = padOffset;
+      this.isLE = isLE3;
+      this.finished = false;
+      this.length = 0;
+      this.pos = 0;
+      this.destroyed = false;
+      this.buffer = new Uint8Array(blockLen);
+      this.view = createView2(this.buffer);
+    }
+    update(data) {
+      aexists2(this);
+      const { view, buffer, blockLen } = this;
+      data = toBytes2(data);
+      const len = data.length;
+      for (let pos = 0; pos < len; ) {
+        const take = Math.min(blockLen - this.pos, len - pos);
+        if (take === blockLen) {
+          const dataView = createView2(data);
+          for (; blockLen <= len - pos; pos += blockLen) this.process(dataView, pos);
+          continue;
+        }
+        buffer.set(data.subarray(pos, pos + take), this.pos);
+        this.pos += take;
+        pos += take;
+        if (this.pos === blockLen) {
+          this.process(view, 0);
+          this.pos = 0;
+        }
+      }
+      this.length += data.length;
+      this.roundClean();
+      return this;
+    }
+    digestInto(out) {
+      aexists2(this);
+      aoutput2(out, this);
+      this.finished = true;
+      const { buffer, view, blockLen, isLE: isLE3 } = this;
+      let { pos } = this;
+      buffer[pos++] = 128;
+      this.buffer.subarray(pos).fill(0);
+      if (this.padOffset > blockLen - pos) {
+        this.process(view, 0);
+        pos = 0;
+      }
+      for (let i = pos; i < blockLen; i++) buffer[i] = 0;
+      setBigUint642(view, blockLen - 8, BigInt(this.length * 8), isLE3);
+      this.process(view, 0);
+      const oview = createView2(out);
+      const len = this.outputLen;
+      if (len % 4) throw new Error('_sha2: outputLen should be aligned to 32bit');
+      const outLen = len / 4;
+      const state = this.get();
+      if (outLen > state.length) throw new Error('_sha2: outputLen bigger than state');
+      for (let i = 0; i < outLen; i++) oview.setUint32(4 * i, state[i], isLE3);
+    }
+    digest() {
+      const { buffer, outputLen } = this;
+      this.digestInto(buffer);
+      const res = buffer.slice(0, outputLen);
+      this.destroy();
+      return res;
+    }
+    _cloneInto(to) {
+      to || (to = new this.constructor());
+      to.set(...this.get());
+      const { blockLen, buffer, length, finished, destroyed, pos } = this;
+      to.length = length;
+      to.pos = pos;
+      to.finished = finished;
+      to.destroyed = destroyed;
+      if (length % blockLen) to.buffer.set(buffer);
+      return to;
+    }
+  };
+
+  // node_modules/@scure/starknet/node_modules/@noble/hashes/esm/sha256.js
+  var SHA256_K2 = /* @__PURE__ */ new Uint32Array([
+    1116352408, 1899447441, 3049323471, 3921009573, 961987163, 1508970993, 2453635748, 2870763221,
+    3624381080, 310598401, 607225278, 1426881987, 1925078388, 2162078206, 2614888103, 3248222580,
+    3835390401, 4022224774, 264347078, 604807628, 770255983, 1249150122, 1555081692, 1996064986,
+    2554220882, 2821834349, 2952996808, 3210313671, 3336571891, 3584528711, 113926993, 338241895,
+    666307205, 773529912, 1294757372, 1396182291, 1695183700, 1986661051, 2177026350, 2456956037,
+    2730485921, 2820302411, 3259730800, 3345764771, 3516065817, 3600352804, 4094571909, 275423344,
+    430227734, 506948616, 659060556, 883997877, 958139571, 1322822218, 1537002063, 1747873779,
+    1955562222, 2024104815, 2227730452, 2361852424, 2428436474, 2756734187, 3204031479, 3329325298,
+  ]);
+  var SHA256_IV2 = /* @__PURE__ */ new Uint32Array([
+    1779033703, 3144134277, 1013904242, 2773480762, 1359893119, 2600822924, 528734635, 1541459225,
+  ]);
+  var SHA256_W2 = /* @__PURE__ */ new Uint32Array(64);
+  var SHA2562 = class extends HashMD2 {
+    constructor() {
+      super(64, 32, 8, false);
+      this.A = SHA256_IV2[0] | 0;
+      this.B = SHA256_IV2[1] | 0;
+      this.C = SHA256_IV2[2] | 0;
+      this.D = SHA256_IV2[3] | 0;
+      this.E = SHA256_IV2[4] | 0;
+      this.F = SHA256_IV2[5] | 0;
+      this.G = SHA256_IV2[6] | 0;
+      this.H = SHA256_IV2[7] | 0;
+    }
+    get() {
+      const { A, B, C, D, E, F, G, H } = this;
+      return [A, B, C, D, E, F, G, H];
+    }
+    // prettier-ignore
+    set(A, B, C, D, E, F, G, H) {
+      this.A = A | 0;
+      this.B = B | 0;
+      this.C = C | 0;
+      this.D = D | 0;
+      this.E = E | 0;
+      this.F = F | 0;
+      this.G = G | 0;
+      this.H = H | 0;
+    }
+    process(view, offset) {
+      for (let i = 0; i < 16; i++, offset += 4) SHA256_W2[i] = view.getUint32(offset, false);
+      for (let i = 16; i < 64; i++) {
+        const W15 = SHA256_W2[i - 15];
+        const W2 = SHA256_W2[i - 2];
+        const s0 = rotr2(W15, 7) ^ rotr2(W15, 18) ^ (W15 >>> 3);
+        const s1 = rotr2(W2, 17) ^ rotr2(W2, 19) ^ (W2 >>> 10);
+        SHA256_W2[i] = (s1 + SHA256_W2[i - 7] + s0 + SHA256_W2[i - 16]) | 0;
+      }
+      let { A, B, C, D, E, F, G, H } = this;
+      for (let i = 0; i < 64; i++) {
+        const sigma1 = rotr2(E, 6) ^ rotr2(E, 11) ^ rotr2(E, 25);
+        const T1 = (H + sigma1 + Chi2(E, F, G) + SHA256_K2[i] + SHA256_W2[i]) | 0;
+        const sigma0 = rotr2(A, 2) ^ rotr2(A, 13) ^ rotr2(A, 22);
+        const T2 = (sigma0 + Maj2(A, B, C)) | 0;
+        H = G;
+        G = F;
+        F = E;
+        E = (D + T1) | 0;
+        D = C;
+        C = B;
+        B = A;
+        A = (T1 + T2) | 0;
+      }
+      A = (A + this.A) | 0;
+      B = (B + this.B) | 0;
+      C = (C + this.C) | 0;
+      D = (D + this.D) | 0;
+      E = (E + this.E) | 0;
+      F = (F + this.F) | 0;
+      G = (G + this.G) | 0;
+      H = (H + this.H) | 0;
+      this.set(A, B, C, D, E, F, G, H);
+    }
+    roundClean() {
+      SHA256_W2.fill(0);
+    }
+    destroy() {
+      this.set(0, 0, 0, 0, 0, 0, 0, 0);
+      this.buffer.fill(0);
+    }
+  };
+  var sha2562 = /* @__PURE__ */ wrapConstructor2(() => new SHA2562());
 
   // node_modules/@noble/curves/esm/abstract/modular.js
   var _0n3 = BigInt(0);
@@ -16025,7 +16281,7 @@ ${indent}}`
     const nByteLength = Math.ceil(_nBitLength / 8);
     return { nBitLength: _nBitLength, nByteLength };
   }
-  function Field(ORDER, bitLen2, isLE2 = false, redef = {}) {
+  function Field(ORDER, bitLen2, isLE3 = false, redef = {}) {
     if (ORDER <= _0n3) throw new Error('invalid field: expected ORDER > 0, got ' + ORDER);
     const { nBitLength: BITS, nByteLength: BYTES } = nLength(ORDER, bitLen2);
     if (BYTES > 2048) throw new Error('invalid field: expected ORDER of <= 2048 bytes');
@@ -16069,11 +16325,11 @@ ${indent}}`
       // TODO: do we really need constant cmov?
       // We don't have const-time bigints anyway, so probably will be not very useful
       cmov: (a, b, c) => (c ? b : a),
-      toBytes: (num) => (isLE2 ? numberToBytesLE(num, BYTES) : numberToBytesBE(num, BYTES)),
+      toBytes: (num) => (isLE3 ? numberToBytesLE(num, BYTES) : numberToBytesBE(num, BYTES)),
       fromBytes: (bytes) => {
         if (bytes.length !== BYTES)
           throw new Error('Field.fromBytes: expected ' + BYTES + ' bytes, got ' + bytes.length);
-        return isLE2 ? bytesToNumberLE(bytes) : bytesToNumberBE(bytes);
+        return isLE3 ? bytesToNumberLE(bytes) : bytesToNumberBE(bytes);
       },
     });
     return Object.freeze(f);
@@ -16087,15 +16343,15 @@ ${indent}}`
     const length = getFieldBytesLength(fieldOrder);
     return length + Math.ceil(length / 2);
   }
-  function mapHashToField(key, fieldOrder, isLE2 = false) {
+  function mapHashToField(key, fieldOrder, isLE3 = false) {
     const len = key.length;
     const fieldLen = getFieldBytesLength(fieldOrder);
     const minLen = getMinHashLength(fieldOrder);
     if (len < 16 || len < minLen || len > 1024)
       throw new Error('expected ' + minLen + '-1024 bytes of input, got ' + len);
-    const num = isLE2 ? bytesToNumberBE(key) : bytesToNumberLE(key);
+    const num = isLE3 ? bytesToNumberBE(key) : bytesToNumberLE(key);
     const reduced = mod(num, fieldOrder - _1n3) + _1n3;
-    return isLE2 ? numberToBytesLE(reduced, fieldLen) : numberToBytesBE(reduced, fieldLen);
+    return isLE3 ? numberToBytesLE(reduced, fieldLen) : numberToBytesBE(reduced, fieldLen);
   }
 
   // node_modules/@noble/curves/esm/abstract/poseidon.js
@@ -16553,7 +16809,7 @@ ${indent}}`
     const CURVE2 = validatePointOpts(opts);
     const { Fp } = CURVE2;
     const Fn = Field(CURVE2.n, CURVE2.nBitLength);
-    const toBytes2 =
+    const toBytes3 =
       CURVE2.toBytes ||
       ((_c, point, _isCompressed) => {
         const a = point.toAffine();
@@ -16912,7 +17168,7 @@ ${indent}}`
       toRawBytes(isCompressed = true) {
         abool('isCompressed', isCompressed);
         this.assertValidity();
-        return toBytes2(Point2, this, isCompressed);
+        return toBytes3(Point2, this, isCompressed);
       }
       toHex(isCompressed = true) {
         abool('isCompressed', isCompressed);
@@ -17466,7 +17722,7 @@ ${indent}}`
     // cofactor
     lowS: false,
     // Allow high-s signatures
-    ...getHash(sha256),
+    ...getHash(sha2562),
     // Custom truncation routines for stark curve
     bits2int,
     bits2int_modN: (bytes) => {
@@ -17631,12 +17887,12 @@ ${indent}}`
     [0, ...data, data.length].reduce((x, y) => fn(x, y));
   var MASK_2502 = bitMask(250);
   var keccak = (data) => bytesToNumberBE(keccak_256(data)) & MASK_2502;
-  var sha256Num = (data) => bytesToNumberBE(sha256(data));
+  var sha256Num = (data) => bytesToNumberBE(sha2562(data));
   var Fp251 = Field(
     BigInt('3618502788666131213697322783095070105623107215331596699973092056135872020481')
   );
   function poseidonRoundConstant(Fp, name, idx) {
-    const val = Fp.fromBytes(sha256(utf8ToBytes2(`${name}${idx}`)));
+    const val = Fp.fromBytes(sha2562(utf8ToBytes3(`${name}${idx}`)));
     return Fp.create(val);
   }
   function _poseidonMDS(Fp, name, m, attempt = 0) {
@@ -17718,6 +17974,205 @@ ${indent}}`
     return state[0];
   }
 
+  // node_modules/@noble/hashes/esm/_u64.js
+  var U32_MASK642 = /* @__PURE__ */ BigInt(2 ** 32 - 1);
+  var _32n2 = /* @__PURE__ */ BigInt(32);
+  function fromBig2(n, le = false) {
+    if (le) return { h: Number(n & U32_MASK642), l: Number((n >> _32n2) & U32_MASK642) };
+    return { h: Number((n >> _32n2) & U32_MASK642) | 0, l: Number(n & U32_MASK642) | 0 };
+  }
+  function split2(lst, le = false) {
+    let Ah = new Uint32Array(lst.length);
+    let Al = new Uint32Array(lst.length);
+    for (let i = 0; i < lst.length; i++) {
+      const { h, l } = fromBig2(lst[i], le);
+      [Ah[i], Al[i]] = [h, l];
+    }
+    return [Ah, Al];
+  }
+  var rotlSH2 = (h, l, s) => (h << s) | (l >>> (32 - s));
+  var rotlSL2 = (h, l, s) => (l << s) | (h >>> (32 - s));
+  var rotlBH2 = (h, l, s) => (l << (s - 32)) | (h >>> (64 - s));
+  var rotlBL2 = (h, l, s) => (h << (s - 32)) | (l >>> (64 - s));
+
+  // node_modules/@noble/hashes/esm/sha3.js
+  var SHA3_PI2 = [];
+  var SHA3_ROTL2 = [];
+  var _SHA3_IOTA2 = [];
+  var _0n6 = /* @__PURE__ */ BigInt(0);
+  var _1n6 = /* @__PURE__ */ BigInt(1);
+  var _2n5 = /* @__PURE__ */ BigInt(2);
+  var _7n2 = /* @__PURE__ */ BigInt(7);
+  var _256n2 = /* @__PURE__ */ BigInt(256);
+  var _0x71n2 = /* @__PURE__ */ BigInt(113);
+  for (let round = 0, R = _1n6, x = 1, y = 0; round < 24; round++) {
+    [x, y] = [y, (2 * x + 3 * y) % 5];
+    SHA3_PI2.push(2 * (5 * y + x));
+    SHA3_ROTL2.push((((round + 1) * (round + 2)) / 2) % 64);
+    let t = _0n6;
+    for (let j = 0; j < 7; j++) {
+      R = ((R << _1n6) ^ ((R >> _7n2) * _0x71n2)) % _256n2;
+      if (R & _2n5) t ^= _1n6 << ((_1n6 << /* @__PURE__ */ BigInt(j)) - _1n6);
+    }
+    _SHA3_IOTA2.push(t);
+  }
+  var [SHA3_IOTA_H2, SHA3_IOTA_L2] = /* @__PURE__ */ split2(_SHA3_IOTA2, true);
+  var rotlH2 = (h, l, s) => (s > 32 ? rotlBH2(h, l, s) : rotlSH2(h, l, s));
+  var rotlL2 = (h, l, s) => (s > 32 ? rotlBL2(h, l, s) : rotlSL2(h, l, s));
+  function keccakP2(s, rounds = 24) {
+    const B = new Uint32Array(5 * 2);
+    for (let round = 24 - rounds; round < 24; round++) {
+      for (let x = 0; x < 10; x++) B[x] = s[x] ^ s[x + 10] ^ s[x + 20] ^ s[x + 30] ^ s[x + 40];
+      for (let x = 0; x < 10; x += 2) {
+        const idx1 = (x + 8) % 10;
+        const idx0 = (x + 2) % 10;
+        const B0 = B[idx0];
+        const B1 = B[idx0 + 1];
+        const Th = rotlH2(B0, B1, 1) ^ B[idx1];
+        const Tl = rotlL2(B0, B1, 1) ^ B[idx1 + 1];
+        for (let y = 0; y < 50; y += 10) {
+          s[x + y] ^= Th;
+          s[x + y + 1] ^= Tl;
+        }
+      }
+      let curH = s[2];
+      let curL = s[3];
+      for (let t = 0; t < 24; t++) {
+        const shift = SHA3_ROTL2[t];
+        const Th = rotlH2(curH, curL, shift);
+        const Tl = rotlL2(curH, curL, shift);
+        const PI = SHA3_PI2[t];
+        curH = s[PI];
+        curL = s[PI + 1];
+        s[PI] = Th;
+        s[PI + 1] = Tl;
+      }
+      for (let y = 0; y < 50; y += 10) {
+        for (let x = 0; x < 10; x++) B[x] = s[y + x];
+        for (let x = 0; x < 10; x++) s[y + x] ^= ~B[(x + 2) % 10] & B[(x + 4) % 10];
+      }
+      s[0] ^= SHA3_IOTA_H2[round];
+      s[1] ^= SHA3_IOTA_L2[round];
+    }
+    B.fill(0);
+  }
+  var Keccak2 = class _Keccak extends Hash {
+    // NOTE: we accept arguments in bytes instead of bits here.
+    constructor(blockLen, suffix, outputLen, enableXOF = false, rounds = 24) {
+      super();
+      this.blockLen = blockLen;
+      this.suffix = suffix;
+      this.outputLen = outputLen;
+      this.enableXOF = enableXOF;
+      this.rounds = rounds;
+      this.pos = 0;
+      this.posOut = 0;
+      this.finished = false;
+      this.destroyed = false;
+      anumber2(outputLen);
+      if (0 >= this.blockLen || this.blockLen >= 200)
+        throw new Error('Sha3 supports only keccak-f1600 function');
+      this.state = new Uint8Array(200);
+      this.state32 = u32(this.state);
+    }
+    keccak() {
+      if (!isLE) byteSwap32(this.state32);
+      keccakP2(this.state32, this.rounds);
+      if (!isLE) byteSwap32(this.state32);
+      this.posOut = 0;
+      this.pos = 0;
+    }
+    update(data) {
+      aexists(this);
+      const { blockLen, state } = this;
+      data = toBytes(data);
+      const len = data.length;
+      for (let pos = 0; pos < len; ) {
+        const take = Math.min(blockLen - this.pos, len - pos);
+        for (let i = 0; i < take; i++) state[this.pos++] ^= data[pos++];
+        if (this.pos === blockLen) this.keccak();
+      }
+      return this;
+    }
+    finish() {
+      if (this.finished) return;
+      this.finished = true;
+      const { state, suffix, pos, blockLen } = this;
+      state[pos] ^= suffix;
+      if ((suffix & 128) !== 0 && pos === blockLen - 1) this.keccak();
+      state[blockLen - 1] ^= 128;
+      this.keccak();
+    }
+    writeInto(out) {
+      aexists(this, false);
+      abytes2(out);
+      this.finish();
+      const bufferOut = this.state;
+      const { blockLen } = this;
+      for (let pos = 0, len = out.length; pos < len; ) {
+        if (this.posOut >= blockLen) this.keccak();
+        const take = Math.min(blockLen - this.posOut, len - pos);
+        out.set(bufferOut.subarray(this.posOut, this.posOut + take), pos);
+        this.posOut += take;
+        pos += take;
+      }
+      return out;
+    }
+    xofInto(out) {
+      if (!this.enableXOF) throw new Error('XOF is not possible for this instance');
+      return this.writeInto(out);
+    }
+    xof(bytes) {
+      anumber2(bytes);
+      return this.xofInto(new Uint8Array(bytes));
+    }
+    digestInto(out) {
+      aoutput(out, this);
+      if (this.finished) throw new Error('digest() was already called');
+      this.writeInto(out);
+      this.destroy();
+      return out;
+    }
+    digest() {
+      return this.digestInto(new Uint8Array(this.outputLen));
+    }
+    destroy() {
+      this.destroyed = true;
+      this.state.fill(0);
+    }
+    _cloneInto(to) {
+      const { blockLen, suffix, outputLen, rounds, enableXOF } = this;
+      to || (to = new _Keccak(blockLen, suffix, outputLen, enableXOF, rounds));
+      to.state32.set(this.state32);
+      to.pos = this.pos;
+      to.posOut = this.posOut;
+      to.finished = this.finished;
+      to.rounds = rounds;
+      to.suffix = suffix;
+      to.outputLen = outputLen;
+      to.enableXOF = enableXOF;
+      to.destroyed = this.destroyed;
+      return to;
+    }
+  };
+  var gen2 = (suffix, blockLen, outputLen) =>
+    wrapConstructor(() => new Keccak2(blockLen, suffix, outputLen));
+  var sha3_2242 = /* @__PURE__ */ gen2(6, 144, 224 / 8);
+  var sha3_2562 = /* @__PURE__ */ gen2(6, 136, 256 / 8);
+  var sha3_3842 = /* @__PURE__ */ gen2(6, 104, 384 / 8);
+  var sha3_5122 = /* @__PURE__ */ gen2(6, 72, 512 / 8);
+  var keccak_2242 = /* @__PURE__ */ gen2(1, 144, 224 / 8);
+  var keccak_2562 = /* @__PURE__ */ gen2(1, 136, 256 / 8);
+  var keccak_3842 = /* @__PURE__ */ gen2(1, 104, 384 / 8);
+  var keccak_5122 = /* @__PURE__ */ gen2(1, 72, 512 / 8);
+  var genShake2 = (suffix, blockLen, outputLen) =>
+    wrapXOFConstructorWithOpts(
+      (opts = {}) =>
+        new Keccak2(blockLen, suffix, opts.dkLen === void 0 ? outputLen : opts.dkLen, true)
+    );
+  var shake1282 = /* @__PURE__ */ genShake2(31, 168, 128 / 8);
+  var shake2562 = /* @__PURE__ */ genShake2(31, 136, 256 / 8);
+
   // src/utils/hash/selector.ts
   function keccakBn(value) {
     const hexWithoutPrefix = removeHexPrefix(toHex(BigInt(value)));
@@ -17744,7 +18199,7 @@ ${indent}}`
     const myEncode = addHexPrefix(
       params.reduce((res, par) => res + removeHexPrefix(toHex(par)).padStart(64, '0'), '')
     );
-    return addHexPrefix(bytesToHex(keccak_256(hexToBytes2(myEncode))));
+    return addHexPrefix(bytesToHex(keccak_2562(hexToBytes2(myEncode))));
   }
   function getL2MessageHash(l1FromAddress, l2ToAddress, l2Selector, l2Calldata, l1Nonce) {
     return solidityUint256PackedKeccak256([
@@ -24888,9 +25343,9 @@ ${indent}}`
   // node_modules/@noble/curves/esm/secp256k1.js
   var secp256k1P = BigInt('0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f');
   var secp256k1N = BigInt('0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141');
-  var _1n6 = BigInt(1);
-  var _2n5 = BigInt(2);
-  var divNearest = (a, b) => (a + b / _2n5) / b;
+  var _1n7 = BigInt(1);
+  var _2n6 = BigInt(2);
+  var divNearest = (a, b) => (a + b / _2n6) / b;
   function sqrtMod(y) {
     const P = secp256k1P;
     const _3n3 = BigInt(3),
@@ -24904,7 +25359,7 @@ ${indent}}`
     const b3 = (b2 * b2 * y) % P;
     const b6 = (pow2(b3, _3n3, P) * b3) % P;
     const b9 = (pow2(b6, _3n3, P) * b3) % P;
-    const b11 = (pow2(b9, _2n5, P) * b2) % P;
+    const b11 = (pow2(b9, _2n6, P) * b2) % P;
     const b22 = (pow2(b11, _11n, P) * b11) % P;
     const b44 = (pow2(b22, _22n, P) * b22) % P;
     const b88 = (pow2(b44, _44n, P) * b44) % P;
@@ -24913,7 +25368,7 @@ ${indent}}`
     const b223 = (pow2(b220, _3n3, P) * b3) % P;
     const t1 = (pow2(b223, _23n, P) * b22) % P;
     const t2 = (pow2(t1, _6n, P) * b2) % P;
-    const root = pow2(t2, _2n5, P);
+    const root = pow2(t2, _2n6, P);
     if (!Fpk1.eql(Fpk1.sqr(root), y)) throw new Error('Cannot find square root');
     return root;
   }
@@ -24946,7 +25401,7 @@ ${indent}}`
         splitScalar: (k) => {
           const n = secp256k1N;
           const a1 = BigInt('0x3086d221a7d46bcde86c90e49284eb15');
-          const b1 = -_1n6 * BigInt('0xe4437ed6010e88286f547fa90abfe4c3');
+          const b1 = -_1n7 * BigInt('0xe4437ed6010e88286f547fa90abfe4c3');
           const a2 = BigInt('0x114ca50f7a8e2f3f657c1108d9d44cfd8');
           const b2 = a1;
           const POW_2_128 = BigInt('0x100000000000000000000000000000000');
@@ -24967,7 +25422,7 @@ ${indent}}`
     },
     sha256
   );
-  var _0n6 = BigInt(0);
+  var _0n7 = BigInt(0);
   var Point = secp256k1.ProjectivePoint;
 
   // src/utils/eth.ts
@@ -31525,20 +31980,16 @@ ${parameter}`);
           calldata: it[2],
         };
       });
-      console.log('calls', calls);
-      console.log('txCalls', txCalls);
       const params = {
         calls: txCalls,
       };
-      console.log('params', params);
       const txData = prepareMulticallCalldata(params.calls);
       const txObject = {
         from: this.address,
-        to: this.address,
+        to: '0x0000000000000000000000004645415455524553',
         data: txData,
         value: '0x0',
       };
-      console.log('txObject', txObject);
       const txHash = await sendTransaction(this.walletProvider, txObject);
       return { transaction_hash: txHash };
     }
@@ -31939,7 +32390,7 @@ ${parameter}`);
 
   // src/index.ts
   var number = num_exports;
-  return __toCommonJS(src_exports);
+  return __toCommonJS(index_exports);
 })();
 /*! Bundled license information:
 
@@ -31976,101 +32427,8 @@ tough-cookie/lib/pubsuffix-psl.js:
    *)
 
 tough-cookie/lib/store.js:
-  (*!
-   * Copyright (c) 2015, Salesforce.com, Inc.
-   * All rights reserved.
-   *
-   * Redistribution and use in source and binary forms, with or without
-   * modification, are permitted provided that the following conditions are met:
-   *
-   * 1. Redistributions of source code must retain the above copyright notice,
-   * this list of conditions and the following disclaimer.
-   *
-   * 2. Redistributions in binary form must reproduce the above copyright notice,
-   * this list of conditions and the following disclaimer in the documentation
-   * and/or other materials provided with the distribution.
-   *
-   * 3. Neither the name of Salesforce.com nor the names of its contributors may
-   * be used to endorse or promote products derived from this software without
-   * specific prior written permission.
-   *
-   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-   * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-   * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-   * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-   * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-   * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-   * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-   * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-   * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-   * POSSIBILITY OF SUCH DAMAGE.
-   *)
-
 tough-cookie/lib/permuteDomain.js:
-  (*!
-   * Copyright (c) 2015, Salesforce.com, Inc.
-   * All rights reserved.
-   *
-   * Redistribution and use in source and binary forms, with or without
-   * modification, are permitted provided that the following conditions are met:
-   *
-   * 1. Redistributions of source code must retain the above copyright notice,
-   * this list of conditions and the following disclaimer.
-   *
-   * 2. Redistributions in binary form must reproduce the above copyright notice,
-   * this list of conditions and the following disclaimer in the documentation
-   * and/or other materials provided with the distribution.
-   *
-   * 3. Neither the name of Salesforce.com nor the names of its contributors may
-   * be used to endorse or promote products derived from this software without
-   * specific prior written permission.
-   *
-   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-   * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-   * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-   * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-   * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-   * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-   * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-   * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-   * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-   * POSSIBILITY OF SUCH DAMAGE.
-   *)
-
 tough-cookie/lib/pathMatch.js:
-  (*!
-   * Copyright (c) 2015, Salesforce.com, Inc.
-   * All rights reserved.
-   *
-   * Redistribution and use in source and binary forms, with or without
-   * modification, are permitted provided that the following conditions are met:
-   *
-   * 1. Redistributions of source code must retain the above copyright notice,
-   * this list of conditions and the following disclaimer.
-   *
-   * 2. Redistributions in binary form must reproduce the above copyright notice,
-   * this list of conditions and the following disclaimer in the documentation
-   * and/or other materials provided with the distribution.
-   *
-   * 3. Neither the name of Salesforce.com nor the names of its contributors may
-   * be used to endorse or promote products derived from this software without
-   * specific prior written permission.
-   *
-   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-   * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-   * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-   * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-   * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-   * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-   * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-   * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-   * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-   * POSSIBILITY OF SUCH DAMAGE.
-   *)
-
 tough-cookie/lib/memstore.js:
   (*!
    * Copyright (c) 2015, Salesforce.com, Inc.
@@ -32139,33 +32497,22 @@ tough-cookie/lib/cookie.js:
   (*! scure-base - MIT License (c) 2022 Paul Miller (paulmillr.com) *)
 
 @noble/curves/esm/abstract/utils.js:
+@noble/curves/esm/abstract/modular.js:
+@noble/curves/esm/abstract/poseidon.js:
+@noble/curves/esm/abstract/curve.js:
+@noble/curves/esm/abstract/weierstrass.js:
+@noble/curves/esm/_shortw_utils.js:
+@noble/curves/esm/secp256k1.js:
   (*! noble-curves - MIT License (c) 2022 Paul Miller (paulmillr.com) *)
 
 @noble/hashes/esm/utils.js:
+@noble/hashes/esm/utils.js:
   (*! noble-hashes - MIT License (c) 2022 Paul Miller (paulmillr.com) *)
-
-@noble/curves/esm/abstract/modular.js:
-  (*! noble-curves - MIT License (c) 2022 Paul Miller (paulmillr.com) *)
-
-@noble/curves/esm/abstract/poseidon.js:
-  (*! noble-curves - MIT License (c) 2022 Paul Miller (paulmillr.com) *)
-
-@noble/curves/esm/abstract/curve.js:
-  (*! noble-curves - MIT License (c) 2022 Paul Miller (paulmillr.com) *)
-
-@noble/curves/esm/abstract/weierstrass.js:
-  (*! noble-curves - MIT License (c) 2022 Paul Miller (paulmillr.com) *)
-
-@noble/curves/esm/_shortw_utils.js:
-  (*! noble-curves - MIT License (c) 2022 Paul Miller (paulmillr.com) *)
 
 @scure/starknet/lib/esm/index.js:
   (*! scure-starknet - MIT License (c) 2022 Paul Miller (paulmillr.com) *)
 
 pako/dist/pako.esm.mjs:
   (*! pako 2.1.0 https://github.com/nodeca/pako @license (MIT AND Zlib) *)
-
-@noble/curves/esm/secp256k1.js:
-  (*! noble-curves - MIT License (c) 2022 Paul Miller (paulmillr.com) *)
 */
 //# sourceMappingURL=index.global.js.map
